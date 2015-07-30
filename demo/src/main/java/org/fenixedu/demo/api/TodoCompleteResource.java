@@ -1,5 +1,6 @@
 package org.fenixedu.demo.api;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.fenixedu.bennu.core.domain.Bennu;
+import org.fenixedu.bennu.core.groups.Group;
 import org.fenixedu.bennu.core.rest.BennuRestResource;
 import org.fenixedu.demo.domain.Todo;
 
@@ -24,47 +26,40 @@ public class TodoCompleteResource extends BennuRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonElement view() {
-        accessControl("anyone");
-
+        accessControl(Group.anyone());
         return view(Bennu.getInstance().getTodoSet(), "todos");
-
     }
 
     @GET
     @Path("{todoId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject view(@PathParam("todoId") Todo todo) {
-
-        accessControl("anyone");
-
-        return view(todo);
-
+    public JsonElement view(@PathParam("todoId") Todo todo) {
+        accessControl(Group.anyone());
+        return super.view(todo);
     }
 
     @PUT
     @Path("{todoId}")
-    public JsonElement update(@PathParam("todoId") Todo todo, @FormParam("todoJson") JsonElement todoJson) {
-
-        accessControl("anyone");
-
-        return view(update(todoJson, todo));
-
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonElement update(@PathParam("todoId") Todo todo) {
+        accessControl(Group.anyone());
+        return view(update(null, todo));
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject create(@FormParam("todoJson") JsonObject todoJson) {
-
-        accessControl("anyone");
-
+    public JsonElement create(@FormParam("todoJson") JsonObject todoJson) {
+        accessControl(Group.anyone());
         return view(create(todoJson, Todo.class));
-
     }
 
     @DELETE
     @Path("{todoId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("todoId") Todo todo) {
+        accessControl(Group.anyone());
         todo.delete();
         return ok();
     }
