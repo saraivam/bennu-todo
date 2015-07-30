@@ -1,0 +1,16 @@
+package org.fenixedu.demo.domain;
+
+class Todo {
+    String text;
+    DateTime completed;
+}
+
+relation BennuTodo {
+    Todo playsRole todo {
+        multiplicity *;
+    }
+
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+        multiplicity 1..1;
+    }
+}
